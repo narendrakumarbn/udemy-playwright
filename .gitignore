@@ -1,0 +1,44 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Pytest cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Playwright generated files
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Browser binaries (if stored locally)
+ms-playwright/
+
+# IDE settings
+.vscode/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
