@@ -30,3 +30,20 @@ def test_corelocators(page):
     nokiaproduct.locator("button").click()
     checkout = page.locator("text=Checkout").click()
     expect(page.locator(".media-body")).to_have_count(2)
+
+
+def test_childwindow(page):
+    page.goto("https://rahulshettyacademy.com/loginpagePractise/")
+
+    with page.expect_popup() as newpage_info:
+        page.locator(".blinkingText").first.click()
+
+    childpage = newpage_info.value
+    childpage.wait_for_load_state()
+
+    text = childpage.locator(".red").text_content()
+    words = text.split("at")
+    email = words[1].strip().split(" ")[0]
+
+    assert email == "mentor@rahulshettyacademy.com"
+    print(email)
