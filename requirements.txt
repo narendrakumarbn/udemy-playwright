@@ -1,0 +1,8 @@
+
+# Browser automation
+playwright
+pytest
+pytest-playwright
+
+# Parallel test execution (optional, if using pytest -n)
+pytest-xdist
