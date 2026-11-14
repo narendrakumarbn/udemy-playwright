@@ -1,9 +1,14 @@
-
 import json
+from pathlib import Path
+
+from typing import Self
 from playwright.sync_api import Browser, Playwright, Response, expect
-from apiBase import APIUtils
 import pytest
 
+from framework.utils.apiBaseFramework import APIUtils
+from framework.pageObjecs.dashboard import DashboardPage
+from framework.pageObjecs.orderDetails import OrderDetailsPage
+from framework.pageObjecs.Login import LoginPage
 #json file -> util -> access into test
 with open('data/credentials.json') as f:
     test_data = json.load(f)
@@ -14,11 +19,9 @@ with open('data/credentials.json') as f:
     
 
 @pytest.mark.parametrize('user_credentials', user_credentials_list)
-def test_ene_webapi(playwright:Playwright, user_credentials):
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
-
+def test_ene_webapi(playwright:Playwright, user_credentials, browserInstance):
+    username = user_credentials['userEmail']
+    password = user_credentials['userPassword']
 
     #create order -> orderid
     api_utils = APIUtils()
@@ -26,16 +29,13 @@ def test_ene_webapi(playwright:Playwright, user_credentials):
     
 
     #login
-    page.goto("https://rahulshettyacademy.com/client")
-    page.get_by_placeholder("email@example.com").fill(user_credentials['userEmail'])
-    page.get_by_placeholder("enter your passsword").fill(user_credentials['userPassword'])
-    page.get_by_role("button", name="Login").click()
+    loginpage = LoginPage(browserInstance)
+    loginpage.navigate(browserInstance)
+    dashboardPage = loginpage.login(username,password)
 
-    page.get_by_role("button", name="ORDERS").click()
-
-
+    #dashboard page
+    orderHistoryPage = dashboardPage.selectOrdersNavLink()
+    orderHistoryPage = orderHistoryPage.selectOrder(orderId)
+    orderHistoryPage.verifyOrderMessage()
     #orders History page -> orser is present
-    row = page.locator("tr").filter(has_text=orderId)
-    row.get_by_role("button", name="View").click()
-    expect(page.locator(".tagline")).to_contain_text("Thank you for Shopping")
-    context.close()
+
